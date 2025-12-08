@@ -15,6 +15,8 @@ int circuitSize[1000] = {0};
 // boolean table to check if junction i (row) and j (col) are connected
 int connections[1000][1000] = {0};
 
+double distances[1000][1000];
+
 typedef struct {
     int x, y, z;
 } Junction;
@@ -81,13 +83,21 @@ int main() {
         circuitSize[i] = 1;
     }
 
+    for (int i = 0; i < numJunctions; i++) {
+        for (int j = 0; j < numJunctions; j++) {
+            double d = dist(junctions[i], junctions[j]);
+            distances[i][j] = d;
+            distances[j][i] = d;
+        }
+    }
+
     for (int p = 0; p < targetPairs; p++) {
         int shortest[2] = {0,0};
         double minDist = __INT_MAX__;
         for (int i = 0; i < numJunctions; i++) {
             for (int j = 0; j < numJunctions; j++) {
                 if (!connections[i][j] && i != j) {
-                    double d = dist(junctions[i], junctions[j]);
+                    double d = distances[i][j];
                     if (d < minDist) {
                         minDist = d;
                         shortest[0] = i;
@@ -98,12 +108,9 @@ int main() {
         }
         int i = shortest[0];
         int j = shortest[1];
-        printf("Connecting %d, %d, %d ", junctions[i].x, junctions[i].y, junctions[i].z);
-        printf("and %d, %d, %d\n", junctions[j].x, junctions[j].y, junctions[j].z); 
         connections[i][j] = 1;
         connections[j][i] = 1;
         unite(i, j);
-        printf("%d\n", circuitSize[find(i)]);
     }
 
     printf("\n");
