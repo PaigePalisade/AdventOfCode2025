@@ -24,7 +24,7 @@ long getTimelines(int r, int c) {
     if (grid[r+1][c] == '.') {
         res = getTimelines(r+1,c);
     }
-    if (grid[r+1][c] == '^') {
+    if (grid[r+1][c] == '^') { 
         // col doesn't have to be bounds checked
         // as the input is designed so that beams never go off the sides
         res = getTimelines(r+1,c-1) + getTimelines(r+1,c+1);
